@@ -1,12 +1,12 @@
 <template>
     <v-container grid-list-xs>
-        <v-layout row wrap>
+        <v-layout row wrap v-if="!loading && myAds.length !== 0">
             <v-flex xs12 sm6 offset-sm3>
                 <h1 class="text--secondary mb-3">My ads</h1>
                 
                 <v-card 
                     class="elevation-10 mb-5"
-                    v-for="ad in ads"
+                    v-for="ad in myAds"
                     :key="ad.id"
                     
                 >
@@ -34,37 +34,32 @@
                 </v-card>
             </v-flex>
         </v-layout>
+        <v-layout row wrap v-else-if="!loading && myAds.length === 0">
+            <v-flex xs12 class="d-flex justify-center mt-5">
+                <h1 class="primary--text">You have no ads</h1>
+            </v-flex>
+        </v-layout>
+        <v-layout row wrap v-else>
+            <v-flex xs12 class="d-flex justify-center mt-5">
+                <v-progress-circular
+                    :size="100"
+                    color="primary"
+                    indeterminate
+                ></v-progress-circular>
+            </v-flex>
+        </v-layout>
     </v-container>
 </template>
 
 <script>
 export default {
-    data() {
-        return {
-            ads: [
-                {
-                    title: 'First Ad', 
-                    description: 'Hello I am Description', 
-                    promo: false, 
-                    imageSrc: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg', 
-                    id: '123'
-                },
-                {
-                    title: 'Second Ad', 
-                    description: 'Hello I am Description', 
-                    promo: true, 
-                    imageSrc: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg', 
-                    id: '1234'
-                },
-                {
-                    title: 'Third Ad', 
-                    description: 'Hello I am Description', 
-                    promo: true, 
-                    imageSrc: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg', 
-                    id: '12345'
-                },
-            ]
+    computed: {
+        myAds() {
+            return this.$store.getters.myAds
+        },
+        loading() {
+            return this.$store.getters.loading
         }
-    },
+    }
 }
 </script>
